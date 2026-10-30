@@ -1,0 +1,202 @@
+# tagging.yaml - how suggestions are made and how tags are written (optional file).
+# Every key is listed with its default value. Templates use $placeholders; "/" inside a
+# tag creates a hierarchy level in Immich (e.g. "miejsce/chorwacja/split").
+# The file may also be written with a top-level "tagging:" key around everything.
+
+# ---------------------------------------------------------------- normalization
+# Applied to every tag from every source, including tags typed by hand. Always: control
+# characters and punctuation (, ; : ! ? # " ( ) [ ] { }) are removed, whitespace collapsed,
+# empty hierarchy levels dropped.
+normalization:
+  # "Chorwacja" -> "chorwacja". Default: true
+  lowercase: true
+  # Spaces inside a tag become this; " " keeps spaces. "Stare Miasto" -> "stare-miasto".
+  # Default: "-"
+  space_replacement: "-"
+  # "Kraków" -> "krakow" (also ł, ø, ß ...). Default: false
+  strip_diacritics: false
+  # Maximum length of a whole tag including parents. Default: 100
+  max_length: 100
+  # Hierarchy levels kept: "a/b/c/d/e" -> "a/b/c/d". Default: 4
+  max_depth: 4
+
+# ---------------------------------------------------------------- album name variant
+# The album title as one tag. $name = title ("/" inside titles is flattened).
+album_name:
+  # Default: true
+  enabled: true
+  # Name of this variant in the CLI suggestions file (the UI shows a translated name).
+  # Default: Album name
+  label: Album name
+  # Default: album/$name
+  template: album/$name
+
+# ---------------------------------------------------------------- rules variant
+# Regex rules matched against the album title (re.search). Named groups become
+# $placeholders; $name (the whole title) is always available. A tag is produced only when
+# every placeholder in it was captured. Placeholders that match no group stop the app at
+# start-up, so typos are caught early. Write regexes in single quotes: '\d' not '\\d'.
+rules:
+  # Default: true
+  enabled: true
+  # Default: Rules
+  label: Rules
+  # Default: [] (no rules). The rules below are examples.
+  rules:
+    # name        - shown in errors only. Required.
+    # pattern     - Python regex. Required.
+    # tags        - tag templates. Required.
+    # ignore_case - match regardless of case. Default: true
+    # value_maps  - translate captured values: {group: {captured: replacement}}. Default: {}
+    - name: year
+      pattern: '\b(?P<year>(?:19|20)\d{2})\b'
+      tags: [rok/$year]
+      ignore_case: true
+      value_maps: {}
+
+    - name: month
+      pattern: '\b(?:19|20)\d{2}[-._ ](?P<month>0[1-9]|1[0-2])\b'
+      tags: [miesiac/$month]
+      value_maps:
+        month: {"01": styczeń, "02": luty, "03": marzec, "04": kwiecień, "05": maj,
+                "06": czerwiec, "07": lipiec, "08": sierpień, "09": wrzesień,
+                "10": październik, "11": listopad, "12": grudzień}
+
+    - name: albania
+      # Case-sensitive "AL" or any-case "Albania", only as a separate word.
+      pattern: '(?<!\S)(?:AL|(?i:albania))(?!\S)'
+      ignore_case: false
+      tags: [miejsce/albania]
+
+# ---------------------------------------------------------------- title keywords variant
+# Every significant word of the title becomes a tag.
+keywords:
+  # Default: true
+  enabled: true
+  # Default: Title keywords
+  label: Title keywords
+  # $word = the word. "slowo/$word" groups them under one parent. Default: $word
+  template: $word
+  # Shorter words are ignored. Default: 3
+  min_length: 3
+  # Ignore tokens without letters (2019, 2019-07). Default: true
+  skip_numbers: true
+  # At most this many keyword tags. Default: 8
+  max_tags: 8
+  # Words never used. Quote them: unquoted on / no / yes are booleans in YAML.
+  # Default: []
+  stopwords: ["i", "w", "na", "z", "do", "oraz", "dla", "the", "and", "of"]
+
+# ---------------------------------------------------------------- LLM
+# Used only when llm.yaml has enabled: true.
+llm:
+  # Alternative proposals asked from the model, 1-6. Default: 3
+  variants: 3
+  # Tags per proposal, 1-30. Default: 8
+  max_tags_per_variant: 8
+  # Language of the tags the model writes. Default: English
+  language: English
+  # Existing Immich tags sent to the model so it reuses them; 0 = none. Default: 300
+  existing_tags_limit: 300
+  # Ask the model for base forms of title words ("Zielonej" -> "zielona") for the album
+  # keywords. One extra short request per album. Default: true
+  normalize_keywords: true
+  # Related words the model may add to the keywords ("nowy rok"), 0-10. Default: 4
+  related_keywords: 4
+
+  # Instructions for the tag proposals. Placeholders: $variants $max_tags $language.
+  # Use $$ for a literal dollar sign. Default: the text below.
+  system_prompt: |
+    You are a photo librarian. You receive the title (and sometimes a description and date range)
+    of a photo album. Propose tags that will be attached to EVERY photo in that album.
+
+    Rules:
+    - Reply with ONLY a JSON object, no prose and no markdown fences.
+    - Schema: {"variants": [{"label": "<short name of the approach>", "tags": ["tag", "..."]}]}
+    - Return exactly $variants variants that differ meaningfully, for example minimal vs detailed,
+      or place-centred vs event-centred.
+    - At most $max_tags tags per variant.
+    - Write tags in $language.
+    - Tags may be hierarchical with "/" as separator, e.g. "place/croatia/split", "event/wedding".
+      Use at most 3 levels.
+    - Prefer tags from the existing tag list when they fit. Never invent near-duplicates of them.
+    - Use only information from the title, description and dates, plus very safe generalisations
+      (a city implies its country). Do not guess people's names or facts not given.
+
+  # The request for one album. Placeholders: $title $description $asset_count
+  # $date_range $existing_tags $language. Default: the text below.
+  user_prompt: |
+    Album title: $title
+    Album description: $description
+    Number of photos: $asset_count
+    Date range: $date_range
+    Existing tags (reuse when they fit): $existing_tags
+
+  # Instructions for base forms and related words. Placeholders: $language $related.
+  # Default: the text below.
+  keywords_prompt: |
+    You normalise words from a photo album title so they can be found by a simple text search.
+    Language: $language.
+
+    Reply with ONLY a JSON object, no prose and no markdown fences:
+    {"keywords": [{"word": "<word exactly as in the input>", "base": "<base form>"}],
+     "related": ["<word or short phrase>", "..."]}
+
+    - "keywords": one entry per input word, in the same order. "base" is the dictionary form
+      (nominative singular for nouns, e.g. "Zielonej" -> "zielona", "Krakowie" -> "kraków"),
+      lower case, keeping diacritics. For names of places use their usual name.
+    - "related": at most $related other words or short phrases a person would likely type to
+      find this album (e.g. "nowy rok" for a New Year's Eve album). Only safe, obvious ones.
+
+# ---------------------------------------------------------------- descriptions
+# The lines the app owns in descriptions; everything else people wrote is kept, and the
+# app's line is replaced (not duplicated) on the next apply.
+descriptions:
+  photo:
+    # Each tag is written as <prefix><tag> on one line: "#rok/2015 #miejsce/polska".
+    # Search it in Immich with search type "Description". Default: "#"
+    tag_prefix: "#"
+  album:
+    # The album description line starting with this label: "Słowa kluczowe: sylwester".
+    # The Albums page filter matches it. Default: "Słowa kluczowe: "
+    label: "Słowa kluczowe: "
+
+# ---------------------------------------------------------------- apply
+# Which targets are ticked when the panel opens, and what the CLI "apply" writes.
+apply:
+  # Immich tags on the photos (searchable only by the owner). Default: true
+  tags: true
+  # The tag line in photo descriptions (searchable by everyone with access). Default: false
+  photo_description: false
+  # The keyword line in the album description (Albums page filter). Default: false
+  album_description: false
+
+# ---------------------------------------------------------------- preselect
+# Variants put into "Tags to apply" when the panel opens an album that is not tagged yet,
+# merged in this order (duplicates dropped). An album tagged before starts with its tags.
+#   first          the first variant shown (album name, if that generator is on)
+#   album-name     the album name tag
+#   rules          the regex rules
+#   keywords       title words as written
+#   keywords-base  title words in base form (LLM)
+#   llm            the first LLM variant
+#   llm-all        every LLM variant
+# Example: [rules, llm]. [] = start empty.
+# Default: [first]
+preselect: [first]
+
+# ---------------------------------------------------------------- prefetch
+# Prepare suggestions in the background for the next untagged albums you own, in list
+# order, one at a time, in memory only.
+prefetch:
+  # Default: true
+  enabled: true
+  # How many albums to keep ready, 1-100. Default: 10
+  albums: 10
+  # Prepare again after this many minutes. Default: 240
+  max_age_minutes: 240
+  # After a failure (e.g. LLM down) wait this long before retrying an album. Default: 5
+  retry_after_minutes: 5
+  # Albums prepared at the same time, 0-16. 0 = as many as the LLM endpoints take at once
+  # (sum of their max_concurrent in llm.yaml); 1 without LLM. Default: 0
+  workers: 0

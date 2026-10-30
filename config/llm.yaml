@@ -1,0 +1,41 @@
+# OpenAI-compatible endpoint used to suggest tags.
+# Anything that serves POST <base_url>/chat/completions works: llama.cpp llama-server,
+# vLLM, Ollama (http://host:11434/v1), LiteLLM / Bifrost gateways, OpenAI.
+
+# Set LLM_ENABLED=false to use only the rule-based suggestions.
+enabled: ${LLM_ENABLED:-true}
+
+# Including the /v1 part, e.g. http://llm-host:8080/v1
+base_url: ${LLM_BASE_URL}
+
+# Leave empty if the endpoint needs no key.
+api_key: ${LLM_API_KEY:-}
+
+# Model name exactly as the endpoint lists it under /models.
+model: ${LLM_MODEL}
+
+temperature: 0.3
+# Three variants with Polish characters easily exceed 1024 tokens; replies cut off are not
+# valid JSON.
+max_tokens: 2048
+timeout_seconds: 90
+verify_tls: true
+
+# Ask the server for strict JSON (response_format=json_object).
+# Enable only if your server supports it; the reply is parsed leniently either way.
+json_mode: false
+
+# Extra HTTP headers sent with every request.
+extra_headers: {}
+
+# Extra fields merged into the request body. Example for Qwen3-style reasoning models on
+# llama-server, to skip the <think> phase (faster; think blocks are stripped anyway):
+# extra_body:
+#   chat_template_kwargs:
+#     enable_thinking: false
+extra_body: {}
+# Requests at the same time (llama-server: its --parallel slots).
+max_concurrent: 2
+# More models / endpoints used side by side (round robin, failover); each needs "model",
+# the rest defaults to the values above. See llm.yaml.example.
+endpoints: []

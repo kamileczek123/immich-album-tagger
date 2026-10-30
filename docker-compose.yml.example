@@ -1,0 +1,31 @@
+# cp docker-compose.yml.example docker-compose.yml && docker compose up -d   ->   http://<host>:8080
+services:
+  immich-album-tagger:
+    # Released image (linux/amd64, linux/arm64); pin a version, e.g. :0.9.1.
+    image: kamileczek123/immich-album-tagger:latest
+    # To build from this source tree instead, use these two lines:
+    # build: .
+    # image: immich-album-tagger:local
+    container_name: immich-album-tagger
+    env_file: .env
+    ports:
+      - "8080:8080"
+    volumes:
+      # immich.yaml, llm.yaml, tagging.yaml, app.yaml, credentials.yaml.
+      # Read-write so credentials.yaml can be hashed on the first start.
+      - ./config:/config
+      - immich-album-tagger-data:/data     # history of applied tags, session key
+      - ./language:/language               # translation files (*.lan), installed by the app
+      - ./logs:/logs                       # operations.log
+    restart: unless-stopped
+    # To reach Immich by its container name (IMMICH_URL=http://immich_server:2283),
+    # join the network of your Immich compose project:
+    # networks: [immich]
+
+volumes:
+  immich-album-tagger-data:
+
+# networks:
+#   immich:
+#     external: true
+#     name: immich_default

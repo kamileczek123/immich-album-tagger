@@ -1,0 +1,58 @@
+# immich.yaml - how to reach Immich (REQUIRED file).
+# Every key is listed with its default value. ${NAME} / ${NAME:-default} reads an UPPER_CASE
+# environment variable (.env), so secrets stay out of this file.
+# The file may also be written with a top-level "immich:" key around everything.
+
+# Base URL of the Immich server. "/api" is appended if missing.
+# Required, no default.
+url: ${IMMICH_URL}
+
+# API key created in Immich (Account settings -> API Keys) by the user who OWNS the photos.
+# Permissions: see docs/ADMIN_GUIDE.md, section 2. Required, except with auth.mode
+# immich_keys in app.yaml: then the web UI creates a key per login and only the CLI uses
+# this one. Default: "" (empty)
+api_key: ${IMMICH_API_KEY}
+
+# Check the TLS certificate of Immich. false only for self-signed certificates.
+# Default: true
+verify_tls: true
+
+# Timeout of one request to Immich, in seconds.
+# Default: 30
+timeout_seconds: 30
+
+# Search API used to list the photos of an album:
+#   auto   - try the Immich >= 3.2 "filter" search, fall back to the older one
+#   filter - Immich >= 3.2 only
+#   legacy - Immich < 3.2
+# Default: auto
+search_api: auto
+
+# Photos per search page, 1-1000 (Immich allows at most 1000).
+# Default: 1000
+page_size: 1000
+
+# Photos per tagging / description request.
+# Default: 1000
+tag_batch_size: 1000
+
+# Also change archived photos of the album (filter search only).
+# Default: true
+include_archived: true
+
+# After applying, check in Immich that every photo kept the tags / description line.
+# Default: true
+verify_after_apply: true
+
+# Seconds to wait before that check. Immich processes changes in background jobs and, on a
+# read-only external library, silently reverts them a moment later. 0-120.
+# Default: 5
+verify_delay_seconds: 5
+
+# If something is still missing, check again this many times before warning. 0-20.
+# Default: 3
+verify_retries: 3
+
+# Seconds between those checks. Worst case an apply waits delay + retries x this. 0-120.
+# Default: 5
+verify_retry_seconds: 5

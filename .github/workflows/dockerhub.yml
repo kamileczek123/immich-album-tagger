@@ -1,0 +1,108 @@
+# GitHub side of the release: tests on every push, image on Docker Hub for every X.Y.Z tag.
+# This repository is a push mirror of the maintainer's Gitea, which runs its own workflow
+# (.gitea/workflows/docker.yml, publishing to the Gitea registry). Gitea ignores this file
+# because .gitea/workflows exists; GitHub ignores .gitea/.
+#
+# Secrets: DOCKERHUB_USERNAME, DOCKERHUB_TOKEN (Docker Hub personal access token, Read & Write).
+
+name: Test and publish to Docker Hub
+
+on:
+  push:
+    branches: ["master"]
+    tags: ["*"]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: kamileczek123/immich-album-tagger
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+      - name: Lint
+        run: |
+          ruff check src tests scripts
+          ruff format --check src tests scripts
+      - name: Test
+        run: pytest -q
+
+  publish:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve version from tag
+        id: semver
+        run: |
+          VERSION="${GITHUB_REF#refs/tags/}"
+          if [[ ! "$VERSION" =~ ^[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
+            echo "ERROR: tag '$VERSION' is not X.Y.Z (numeric, no 'v' prefix)."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "minor=${VERSION%.*}" >> "$GITHUB_OUTPUT"
+
+      # The app reports the version from pyproject.toml; never publish a mismatch.
+      - name: Check tag matches pyproject.toml version
+        run: |
+          PROJECT_VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml)
+          if [[ "$PROJECT_VERSION" != "${{ steps.semver.outputs.version }}" ]]; then
+            echo "ERROR: tag ${{ steps.semver.outputs.version }} != version $PROJECT_VERSION in pyproject.toml."
+            exit 1
+          fi
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.semver.outputs.version }}
+            ${{ env.IMAGE }}:${{ steps.semver.outputs.minor }}
+            ${{ env.IMAGE }}:latest
+          labels: |
+            org.opencontainers.image.title=Immich Album Tagger
+            org.opencontainers.image.description=Suggest tags from Immich album titles and apply them to every photo in the album.
+            org.opencontainers.image.version=${{ steps.semver.outputs.version }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # README links to docs/ and docs/img/; make them absolute GitHub links on Docker Hub.
+      - name: Update Docker Hub description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.IMAGE }}
+          short-description: Suggest tags from Immich album titles (rules + LLM) and apply them to every photo of the album.
+          readme-filepath: ./README.md
+          enable-url-completion: true

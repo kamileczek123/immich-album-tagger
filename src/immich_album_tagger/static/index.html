@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="app.title">Immich Album Tagger</title>
+  <link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+  <script src="static/theme.js"></script>
+  <link rel="stylesheet" href="immich-theme.css">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body class="shell">
+  <nav class="topbar">
+    <a class="brand" href="./">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 5h11.5L28 16.5 16.5 28 5 16.5z"/><circle cx="11" cy="11" r="2.6"/></svg>
+      <span class="brand-text"><span class="brand-immich">Immich</span> Album Tagger</span>
+    </a>
+    <label class="search">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+      <input id="q" type="search" data-i18n-placeholder="list.filter" data-i18n-aria="list.filter" autocomplete="off">
+    </label>
+    <div class="top-actions">
+      <button id="theme" type="button" class="icon-btn" data-i18n-title="nav.theme" data-i18n-aria="nav.theme"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/><g class="sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg></button>
+      <div class="account">
+        <button id="account" type="button" class="avatar" aria-haspopup="true" aria-expanded="false" data-i18n-aria="nav.account">?</button>
+        <div id="account-menu" class="menu" hidden>
+          <p id="who" class="menu-who"></p>
+          <p class="menu-version"><span data-i18n="app.version">Immich Album Tagger version</span> <span id="version"></span></p>
+          <button id="logout" type="button" class="menu-item" hidden><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H4"/></svg><span data-i18n="nav.logout">Log out</span></button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <aside class="sidebar">
+    <a href="./" class="side-link" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m3 16 5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/></svg><span data-i18n="nav.albums">Albums</span></a>
+    <a href="logs" class="side-link"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span data-i18n="nav.logs">Logs</span></a>
+    <a href="../" id="to-immich" class="side-link" hidden><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg><span data-i18n="nav.immich">Open Immich</span></a>
+    <div class="side-foot">
+      <p id="conn" class="conn" data-state="pending" data-i18n="status.connecting">Connecting to Immich…</p>
+      <p id="prefetch" class="prefetch" hidden></p>
+      <p class="disclaimer" data-i18n="app.disclaimer">Not affiliated with or endorsed by Immich or FUTO. Immich is a trademark of FUTO.</p>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="page-head">
+      <h1 data-i18n="nav.albums">Albums</h1>
+      <p id="count" class="count"></p>
+    </header>
+    <div class="toolbar">
+      <div class="seg" role="group" data-i18n-aria="list.show">
+        <button type="button" data-filter="all" aria-pressed="true" data-i18n="list.all">All</button>
+        <button type="button" data-filter="untagged" aria-pressed="false" data-i18n="list.untagged">Not tagged yet</button>
+        <button type="button" data-filter="tagged" aria-pressed="false" data-i18n="list.tagged">Tagged</button>
+      </div>
+      <span class="spacer"></span>
+      <button id="select-mode" type="button" class="btn ghost" aria-pressed="false" data-i18n="bulk.start">Select albums</button>
+      <button id="reload" type="button" class="btn ghost" data-i18n="list.reload">Reload albums</button>
+    </div>
+
+    <ul id="albums" class="albums"></ul>
+    <p id="empty" class="empty" hidden></p>
+  </main>
+
+  <!-- Bulk actions for selected albums -->
+  <form id="bulk" class="bulk" hidden>
+    <div class="bulk-row">
+      <strong id="bulk-count"></strong>
+      <button id="bulk-all" type="button" class="quiet" data-i18n="bulk.select_all">Select all shown</button>
+      <button id="bulk-none" type="button" class="quiet" data-i18n="bulk.clear">Clear</button>
+    </div>
+    <div class="bulk-row">
+      <input id="bulk-user" list="user-list" type="text" data-i18n-placeholder="share.users_placeholder" data-i18n-aria="share.with" autocomplete="off" required>
+      <select id="bulk-role" data-i18n-aria="share.can">
+        <option value="viewer" data-i18n="role.viewer">Can view</option>
+        <option value="editor" data-i18n="role.editor">Can add and remove photos</option>
+      </select>
+      <button id="bulk-share" type="submit" class="primary" data-i18n="bulk.share">Share selected</button>
+      <button id="bulk-remove" type="button" class="secondary-btn" data-i18n="bulk.remove">Remove access</button>
+    </div>
+    <p id="bulk-result" class="result" role="status"></p>
+  </form>
+
+  <div id="scrim" class="scrim" hidden></div>
+
+  <!-- Tagging panel -->
+  <aside id="panel" class="panel" role="dialog" aria-modal="true" aria-labelledby="p-title" hidden>
+    <div class="panel-head">
+      <img id="p-thumb" class="cover" alt="">
+      <div>
+        <h2 id="p-title"></h2>
+        <p id="p-meta" class="meta"></p>
+      </div>
+      <button type="button" class="close icon-btn" data-close data-i18n-aria="action.close"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+
+    <div class="panel-body">
+      <section>
+        <div class="section-head">
+          <h3><span data-i18n="panel.suggestions">Suggestions</span> <span id="p-prepared" class="pill" hidden data-i18n="panel.prepared">prepared in background</span></h3>
+          <button id="p-regen" type="button" class="quiet" data-i18n="panel.suggest_again">Suggest again</button>
+        </div>
+        <div id="p-variants" class="variants" aria-live="polite"></div>
+        <p id="p-warn" class="warn" hidden></p>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h3 data-i18n="panel.tags">Tags to apply</h3>
+          <button id="p-clear" type="button" class="quiet" data-i18n="panel.clear">Clear</button>
+        </div>
+        <ul id="p-chips" class="chips"></ul>
+        <form id="p-add" class="add">
+          <input id="p-input" list="tag-list" data-i18n-placeholder="panel.tag_placeholder" data-i18n-aria="panel.tag_placeholder" autocomplete="off">
+          <button type="submit" data-i18n="action.add">Add</button>
+        </form>
+        <p class="hint" data-i18n="panel.tag_hint"></p>
+        <p id="p-photo-preview" class="preview" hidden></p>
+        <datalist id="tag-list"></datalist>
+      </section>
+
+      <section id="p-keywords-section">
+        <div class="section-head">
+          <h3 data-i18n="panel.keywords">Album keywords</h3>
+          <button id="p-kw-reset" type="button" class="quiet" data-i18n="panel.keywords_reset">Fill from tags</button>
+        </div>
+        <label class="hint" for="p-kw-line" data-i18n="panel.keywords_hint"></label>
+        <input id="p-kw-line" class="kw-line" type="text" autocomplete="off" spellcheck="false" data-i18n-placeholder="panel.keywords_placeholder">
+        <p class="hint" data-i18n="panel.keywords_suggestions"></p>
+        <ul id="p-kw-suggestions" class="toggles"></ul>
+        <p id="p-album-preview" class="preview" hidden></p>
+      </section>
+    </div>
+
+    <footer class="panel-foot">
+      <fieldset class="targets">
+        <legend data-i18n="target.legend">Write to</legend>
+        <label>
+          <input type="checkbox" id="t-tags">
+          <span><strong data-i18n="target.tags">Tags on photos</strong>
+            <small data-i18n="target.tags_hint"></small></span>
+        </label>
+        <label>
+          <input type="checkbox" id="t-photo">
+          <span><strong data-i18n="target.photo">Photo descriptions</strong>
+            <small data-i18n="target.photo_hint"></small></span>
+        </label>
+        <label>
+          <input type="checkbox" id="t-album">
+          <span><strong data-i18n="target.album">Album description</strong>
+            <small data-i18n="target.album_hint"></small></span>
+        </label>
+      </fieldset>
+      <p id="p-removal" class="removal" hidden></p>
+      <div class="foot-row">
+        <button id="p-apply" type="button" class="primary" disabled></button>
+        <button id="p-remove" type="button" class="danger-btn" data-i18n="remove.button" hidden>Remove tagging</button>
+        <p id="p-result" class="result" role="status"></p>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- Sharing panel -->
+  <aside id="share" class="panel narrow" role="dialog" aria-modal="true" aria-labelledby="s-title" hidden>
+    <div class="panel-head plain">
+      <div>
+        <h2 id="s-title"></h2>
+        <p class="meta" data-i18n="share.subtitle"></p>
+      </div>
+      <button type="button" class="close icon-btn" data-close data-i18n-aria="action.close"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="panel-body">
+      <ul id="s-users" class="people"></ul>
+      <form id="s-add" class="share-form">
+        <label for="s-email" data-i18n="share.with">Share with</label>
+        <input id="s-email" list="user-list" type="text" data-i18n-placeholder="share.users_placeholder" autocomplete="off" required>
+        <datalist id="user-list"></datalist>
+        <label for="s-role" data-i18n="share.can">Can</label>
+        <select id="s-role">
+          <option value="viewer" data-i18n="role.viewer">Can view</option>
+          <option value="editor" data-i18n="role.editor">Can add and remove photos</option>
+        </select>
+        <button type="submit" class="primary" data-i18n="share.button">Share album</button>
+      </form>
+      <p id="s-result" class="result" role="status"></p>
+      <p class="hint" data-i18n="share.hint"></p>
+    </div>
+  </aside>
+
+  <script src="static/app.js" type="module"></script>
+</body>
+</html>

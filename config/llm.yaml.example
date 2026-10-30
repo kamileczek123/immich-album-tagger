@@ -1,0 +1,77 @@
+# llm.yaml - OpenAI-compatible model for tag suggestions (optional file).
+# Without this file the LLM is off and suggestions come from rules and title words only.
+# Anything serving POST <base_url>/chat/completions works: llama.cpp llama-server, vLLM,
+# Ollama (http://host:11434/v1), LiteLLM / Bifrost gateways, OpenAI.
+# The file may also be written with a top-level "llm:" key around everything.
+
+# Use the LLM. LLM_ENABLED=false in .env turns it off without editing this file.
+# Default when the file is missing: false. Default in this file: true.
+enabled: ${LLM_ENABLED:-true}
+
+# Base URL including /v1, e.g. https://your.openai-compatible.url/v1
+# Required when enabled.
+base_url: ${LLM_BASE_URL}
+
+# Bearer token; leave empty if the endpoint needs none.
+# Default: "" (no Authorization header)
+api_key: ${LLM_API_KEY:-}
+
+# Model name exactly as the endpoint lists it under /models.
+# Required when enabled.
+model: ${LLM_MODEL}
+
+# Randomness of the answers, 0 = always the same. Higher = more varied suggestions.
+# Default: 0.3
+temperature: 0.3
+
+# Maximum length of an answer. Three variants with Polish characters need about 1500;
+# answers cut off are not valid JSON.
+# Default: 2048
+max_tokens: 2048
+
+# Timeout of one request, in seconds. Slow local models may need more.
+# Default: 90
+timeout_seconds: 90
+
+# Check the TLS certificate of the endpoint.
+# Default: true
+verify_tls: true
+
+# Send response_format={"type": "json_object"}. Only if the server supports it;
+# answers are parsed leniently either way (think blocks, code fences, prose are ignored).
+# Default: false
+json_mode: false
+
+# Extra HTTP headers for every request, e.g. for gateway routing.
+# Default: {}
+extra_headers: {}
+
+# Extra fields merged into every request body. Example for Qwen3-style reasoning models on
+# llama-server, skipping the <think> phase (faster):
+#   extra_body:
+#     chat_template_kwargs:
+#       enable_thinking: false
+# Default: {}
+extra_body: {}
+
+# Requests sent to this endpoint at the same time. For llama.cpp llama-server use its
+# --parallel value (slots); more only queue on the server. Each album needs two requests
+# (tag variants and base forms of title words), sent together. 1-32.
+# Default: 2
+max_concurrent: 2
+
+# More models or endpoints used side by side with the one above, to prepare suggestions
+# faster: requests go round robin to whichever has a free slot, and to the next one when
+# one fails (a failing endpoint is skipped for a minute). Each entry needs "model"; the
+# other keys (base_url, api_key, max_concurrent, extra_headers, extra_body) default to the
+# values above, so for a gateway like LiteLLM or Bifrost the model name is enough.
+# Faster only when the models run on different hardware: two models on one CPU share it.
+# Example:
+#   endpoints:
+#     - model: other-provider/other-model
+#       max_concurrent: 1
+#     - model: big-model
+#       base_url: http://gpu-host:8080/v1
+#       api_key: ${LLM_GPU_API_KEY}
+# Default: []
+endpoints: []

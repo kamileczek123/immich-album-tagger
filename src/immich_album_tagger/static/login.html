@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="app.title">Immich Album Tagger</title>
+  <link rel="icon" href="static/favicon.svg" type="image/svg+xml">
+  <script src="static/theme.js"></script>
+  <link rel="stylesheet" href="immich-theme.css">
+  <link rel="stylesheet" href="static/style.css">
+</head>
+<body class="login-page">
+  <main class="login-wrap">
+    <form id="login" class="login">
+      <div class="login-brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 5h11.5L28 16.5 16.5 28 5 16.5z"/><circle cx="11" cy="11" r="2.6"/></svg></div>
+      <h1 data-i18n="app.title">Immich Album Tagger</h1>
+      <p class="login-sub" data-i18n="login.title">Log in</p>
+      <p id="hint" class="hint" hidden></p>
+      <label for="username" data-i18n="login.username">User name</label>
+      <input id="username" name="username" autocomplete="username" required autofocus>
+      <label for="password" data-i18n="login.password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit" class="primary" data-i18n="login.button">Log in</button>
+      <p id="error" class="result" role="alert"></p>
+    </form>
+    <p class="disclaimer" data-i18n="app.disclaimer">Not affiliated with or endorsed by Immich or FUTO. Immich is a trademark of FUTO.</p>
+  </main>
+  <script src="static/login.js" type="module"></script>
+</body>
+</html>

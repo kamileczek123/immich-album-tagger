@@ -1,0 +1,16 @@
+.env
+.venv
+.git
+.gitea
+.github
+data
+tests
+scripts
+docs
+**/__pycache__
+**/*.pyc
+.pytest_cache
+.ruff_cache
+suggestions*.json
+language
+logs

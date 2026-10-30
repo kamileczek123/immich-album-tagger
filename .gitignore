@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+data/
+.pytest_cache/
+.ruff_cache/
+suggestions*.json
+credentials.yaml
+language/
+logs/
+docker-compose.yml

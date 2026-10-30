@@ -1,0 +1,46 @@
+# Settings of the web app itself.
+
+# Translation file in LANGUAGE_DIR, without ".lan": english, polish, or your own copy.
+language: ${APP_LANGUAGE:-english}
+
+ui:
+  # true: Apply / Share close the panel at once and the result appears as a notification
+  #       in the top left corner (errors link to the operation log).
+  # false: the panel waits for the result and shows it under the button.
+  async_actions: true
+  # How long a notification stays on screen, in milliseconds.
+  toast_ms: 5000
+  # Colors and font from the running Immich (built-in Immich-like colors as fallback).
+  immich_theme: true
+  # Where to read them from; empty = immich.url without /api.
+  immich_theme_url: ""
+  immich_theme_refresh_minutes: 60
+  # Immich's address in the browser, for "open album in Immich"; empty = automatic
+  immich_public_url: ""
+
+sharing:
+  # E-mails filled in automatically in the Share panel and the bulk bar (comma separated
+  # in the field). With these set, sharing an album is: Share album -> Share.
+  default_users: []
+  # viewer = can view, editor = can also add and remove photos
+  default_role: viewer
+
+auth:
+  # auto        - login from credentials.yaml if it exists, otherwise no login
+  # immich      - log in with the e-mail and password of an Immich account
+  # immich_keys - like immich, but everyone works on their own photos (a temporary API key
+  #               is created at login and deleted at logout)
+  # credentials - credentials.yaml required
+  # none        - no login
+  mode: auto
+  # accounts allowed to log in (e-mails or user ids); empty = API key owner only (immich)
+  # or every Immich account (immich_keys)
+  allowed_users: []
+  # mode immich_keys: permissions of the key created at login (apiKey.delete is added)
+  key_permissions: [user.read, album.read, album.update, albumUser.create, albumUser.delete,
+                    asset.read, asset.update, asset.view, tag.read, tag.create, tag.asset]
+  # mode immich_keys: minutes between deletions of expired sessions' keys
+  key_sweep_minutes: 5
+  session_hours: 12
+  # Send the session cookie only over HTTPS; enable when the app is behind a TLS proxy.
+  secure_cookie: false

@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "immich-album-tagger"
+version = "0.9.1"
+description = "Suggest tags from Immich album titles (rules + LLM), review them in a web UI and apply them to every photo in the album."
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Kamil Kuliberda" }]
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "httpx>=0.27",
+    "pydantic>=2.6",
+    "PyYAML>=6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/kamileczek123/immich-album-tagger"
+Documentation = "https://github.com/kamileczek123/immich-album-tagger/tree/master/docs"
+"Docker image" = "https://hub.docker.com/r/kamileczek123/immich-album-tagger"
+Issues = "https://github.com/kamileczek123/immich-album-tagger/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+immich-album-tagger = "immich_album_tagger.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+immich_album_tagger = ["static/*", "languages/*.lan"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+
+[tool.ruff.lint.flake8-bugbear]
+# FastAPI dependency injection uses Depends() in defaults by design.
+extend-immutable-calls = ["fastapi.Depends"]

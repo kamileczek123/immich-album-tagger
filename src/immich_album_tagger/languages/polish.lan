@@ -1,0 +1,266 @@
+# Immich Album Tagger - polski
+# Format: klucz = tekst. {nazwa} wypełnia aplikacja. Linie zaczynające się od # to komentarze.
+# Plik jest kopiowany do LANGUAGE_DIR; kopię z bieżącą @version można tam edytować.
+@language = Polski
+@code = pl
+@version = 0.9.1
+
+app.title = Immich Album Tagger
+app.version = Wersja Immich Album Tagger
+
+# ---- nagłówek i nawigacja
+nav.logs = Logi
+nav.logout = Wyloguj
+nav.back = ← Wróć do albumów
+status.connecting = Łączenie z Immichem…
+status.connected = Immich {version}, {user}. {llm}.
+status.llm_on = LLM {model}
+status.llm_off = LLM wyłączony, tylko reguły
+status.unreachable = Brak połączenia z Immichem: {error}
+prefetch.ready = Gotowe sugestie: {ready}/{window}
+prefetch.preparing = Gotowe sugestie: {ready}/{window} · przygotowuję…
+prefetch.nothing = Nic do przygotowania
+
+# ---- liczebniki (formy: one = 1, few = 2–4, many = 5+, other = ułamki)
+count.albums.one = {n} album
+count.albums.few = {n} albumy
+count.albums.many = {n} albumów
+count.albums.other = {n} albumu
+count.photos.one = {n} zdjęcie
+count.photos.few = {n} zdjęcia
+count.photos.many = {n} zdjęć
+count.photos.other = {n} zdjęcia
+count.people.one = {n} osobą
+count.people.few = {n} osobami
+count.people.many = {n} osobami
+count.people.other = {n} osobami
+count.tags.one = {n} tag
+count.tags.few = {n} tagi
+count.tags.many = {n} tagów
+count.tags.other = {n} tagu
+
+# ---- lista albumów
+list.filter = Filtruj albumy po tytule
+list.show = Pokaż
+list.all = Wszystkie
+list.untagged = Nieotagowane
+list.tagged = Otagowane
+list.reload = Odśwież albumy
+list.loading = Wczytywanie albumów…
+list.load_failed = Nie udało się wczytać albumów: {error}
+list.count = widoczne: {shown}, otagowane: {tagged} z {total}
+list.no_match = Żaden album nie pasuje do filtra.
+list.none = Ten klucz API nie widzi żadnych albumów. Sprawdź właściciela i uprawnienia klucza.
+list.shared_by = udostępnia {owner}
+list.shared_with = udostępniony z {people}
+list.applied_tags = Zastosowane tagi
+list.keywords = Słowa kluczowe: {keywords}
+list.not_tagged = Jeszcze nieotagowany
+list.untitled = (album bez tytułu)
+list.ready = gotowe
+list.ready_title = Sugestie przygotowane w tle
+list.suggest = Zaproponuj tagi
+list.share = Udostępnij album
+
+# ---- zaznaczanie wielu albumów
+bulk.start = Zaznacz albumy
+bulk.done = Zakończ zaznaczanie
+bulk.count = Zaznaczone: {albums}
+bulk.select_all = Zaznacz wszystkie widoczne
+bulk.select_one = Zaznacz {album}
+bulk.clear = Wyczyść
+bulk.only_own = Udostępniać można tylko własne albumy
+bulk.share = Udostępnij zaznaczone
+bulk.remove = Odbierz dostęp
+bulk.sharing = Udostępnianie: {albums}…
+bulk.removing = Odbieranie dostępu: {albums}…
+bulk.confirm_remove = Odebrać {users} dostęp do: {albums}?
+
+# ---- panel tagowania
+action.add = Dodaj
+action.close = Zamknij
+panel.suggestions = Sugestie
+panel.prepared = przygotowane w tle
+panel.suggest_again = Zaproponuj ponownie
+panel.reading = Analizuję tytuł albumu…
+panel.no_suggestions = Brak sugestii dla tego tytułu. Dodaj tagi ręcznie poniżej.
+panel.no_suggestions_error = Brak sugestii: {error}
+panel.use = Użyj
+panel.use_title = Zastąp tymi tagami listę poniżej
+panel.add_title = Dopisz te tagi do listy poniżej
+panel.tags = Tagi do zastosowania
+panel.clear = Wyczyść
+panel.tag_placeholder = Dodaj tag, np. miejsce/chorwacja
+panel.tag_hint = Kliknij tag, aby go edytować. Ukośnik „/” tworzy tagi zagnieżdżone. Istniejące tagi Immicha podpowiadają się same.
+panel.edit = Edytuj
+panel.remove_tag = Usuń {tag}
+panel.no_tags = Brak tagów.
+panel.photo_preview = Linia w opisie zdjęcia: {line}
+panel.keywords = Słowa kluczowe albumu
+panel.keywords_reset = Wypełnij z tagów
+panel.keywords_hint = Słowa, po których ludzie znajdą ten album na stronie Albumy, oddzielone spacjami. Wypełniają się z tagów powyżej i form podstawowych słów z tytułu; możesz je dowolnie zmieniać.
+panel.keywords_placeholder = np. sylwester zielona nowy rok
+panel.keywords_suggestions = Kliknij podpowiedź, aby ją dodać lub usunąć:
+panel.keywords_none = Podpowiedzi pojawią się razem z sugestiami tagów.
+panel.album_preview = Linia w opisie albumu: {line}
+
+source.album-name = Nazwa albumu
+source.rules = Reguły
+source.keywords = Słowa z tytułu
+source.keywords-base = Słowa z tytułu, formy podstawowe
+source.llm = LLM
+source_hint.album-name = z tytułu
+source_hint.rules = z reguł
+source_hint.keywords = jak w tytule
+source_hint.keywords-base = znormalizowane przez LLM
+source_hint.llm = od LLM
+
+target.legend = Zapisz do
+target.tags = Tagi na zdjęciach
+target.tags_hint = Tagi Immicha na każdym Twoim zdjęciu w tym albumie. Wyszukujesz po nich tylko Ty.
+target.photo = Opisy zdjęć
+target.photo_hint = Dopisuje do opisu każdego zdjęcia linię typu „#miejsce/polska #sylwester”. Wyszuka ją każdy, kto widzi zdjęcia (typ wyszukiwania: Opis).
+target.album = Opis albumu
+target.album_hint = Dopisuje linię ze słowami kluczowymi. Znajdzie album na stronie Albumy, także osobom, którym go udostępniono.
+target.photo_short = opisy zdjęć
+target.album_short = opis albumu
+
+apply.button = Zastosuj: {what}
+apply.choose = Wybierz, gdzie zapisać
+apply.working = Zapisuję do: {photos} i sprawdzam wynik…
+apply.photos_updated = zaktualizowano {photos}
+apply.album_updated = zaktualizowano opis albumu
+apply.nothing = nic nie zmieniono
+apply.verified = Sprawdzone w Immichu.
+apply.failed = Nic nie zostało zapisane: {error}
+
+# ---- powiadomienia
+toast.applying = {album}: zapisuję…
+toast.apply_failed = {album}: nic nie zostało zapisane. {error}
+toast.share_failed = {album}: nie udostępniono. {error}
+toast.details = Szczegóły
+
+# ---- udostępnianie
+share.title = Udostępnij „{album}”
+share.subtitle = Osoby z dostępem do tego albumu i jego zdjęć
+share.with = Udostępnij dla
+share.users_placeholder = E-maile użytkowników Immicha, oddzielone przecinkami
+share.can = Uprawnienia
+share.button = Udostępnij album
+share.hint = Osoby, którym udostępnisz album, widzą zdjęcia, ich opisy i opis albumu. Tagi Immicha i rozpoznane osoby widzisz tylko Ty.
+share.remove = Usuń
+share.working = Udostępniam…
+share.failed = Nie udostępniono: {error}
+share.load_failed = Nie udało się wczytać listy osób: {error}
+share.remove_failed = Nie usunięto: {error}
+share.need_user = Podaj e-mail użytkownika Immicha.
+share.confirm_remove = Usunąć {user} z tego albumu?
+share.not_owner = właściciel: {owner}
+share.had_no_access = nie miał dostępu
+share.already_shared = już udostępniony
+share.result.shared = {album}: udostępniono dla {user}
+share.result.removed = {album}: odebrano dostęp {user}
+share.result.unchanged = {album}: {user} bez zmian
+share.result.skipped = {album}: pominięto dla {user}
+share.result.error = {album}: błąd dla {user}
+share.count.shared = udostępniono: {n}
+share.count.removed = odebrano: {n}
+share.count.unchanged = bez zmian: {n}
+share.count.skipped = pominięto: {n}
+share.count.error = błędy: {n}
+role.owner = Właściciel
+role.viewer = Może oglądać
+role.editor = Może dodawać i usuwać zdjęcia
+
+# ---- strona logów
+logs.title = Dziennik operacji
+logs.all = Wszystkie
+logs.errors = Błędy
+logs.successes = Sukcesy
+logs.reload = Odśwież
+logs.clear = Wyczyść logi
+logs.confirm_clear = Usunąć wszystkie wpisy dziennika? Tego nie da się cofnąć.
+logs.empty = Brak wpisów.
+logs.count = {shown} z {total} wpisów, błędów: {errors}
+logs.status.success = SUKCES
+logs.status.error = BŁĄD
+logs.action.apply = Tagi i opisy
+logs.action.share = Udostępnienie albumu
+logs.action.unshare = Odebranie dostępu
+logs.field.tags = Tagi
+logs.field.keywords = Słowa kluczowe albumu
+logs.field.targets = Zapisano do
+logs.field.photos = Zdjęcia (własne / w albumie)
+logs.field.user = Użytkownik
+logs.field.role = Uprawnienia
+logs.field.result = Wynik
+logs.target.tags = tagi na zdjęciach
+logs.target.photo_description = opisy zdjęć
+logs.target.album_description = opis albumu
+logs.result.shared = udostępniono
+logs.result.removed = odebrano dostęp
+logs.result.unchanged = bez zmian
+logs.result.skipped = pominięto
+logs.result.error = błąd
+
+# ---- logowanie
+login.title = Logowanie
+login.username = Nazwa użytkownika
+login.password = Hasło
+login.button = Zaloguj
+
+# ---- komunikaty serwera
+error.login = Nieprawidłowa nazwa użytkownika lub hasło.
+error.session = Zaloguj się.
+error.no_target = Wybierz przynajmniej jedno miejsce zapisu: tagi, opisy zdjęć albo opis albumu.
+error.no_tags = Po normalizacji nie został żaden poprawny tag.
+error.no_keywords = Zaznaczono opis albumu, ale nie ma słów kluczowych.
+error.no_user = Podaj przynajmniej jednego użytkownika.
+error.user_not_found = Brak użytkownika Immicha „{user}”. Ta osoba musi mieć konto na tym serwerze Immich.
+error.share_self = „{user}” to Twoje własne konto.
+error.role = Uprawnienia muszą być jednym z: {roles}.
+error.no_albums = Nie zaznaczono albumów.
+warning.foreign_photos = {foreign} z {total} zdjęć należy do innych użytkowników. Immich pozwala zmieniać tagi i opisy tylko właścicielowi, więc je pominięto.
+warning.album_not_owned = Album należy do {owner}; opis może zmienić tylko właściciel, więc go pominięto.
+warning.verify_failed = Nie udało się sprawdzić wyniku: {error}
+warning.and_more = i jeszcze {count}
+warning.nothing_kept = Żadne z {total} zdjęć nie zachowało: {what} {seconds} s po zapisie. Zdjęcia są w bibliotece zewnętrznej: jeśli Immich nie może tam zapisać plików .xmp (montowanie tylko do odczytu), cofa tagi i opisy. Ustaw bibliotekę jako zapisywalną; zobacz przewodnik administratora.
+warning.partly_kept = {count} z {total} zdjęć nie miało: {what} {seconds} s po zapisie: {files}. Immich może jeszcze je przetwarzać; zastosuj ponownie, aby powtórzyć tylko dla nich. Jeśli problem wraca, sprawdź, czy Immich może zapisywać pliki .xmp obok nich.
+warning.llm_unavailable = Sugestie LLM są niedostępne: {error}
+warning.keywords_unavailable = Formy podstawowe słów są niedostępne: {error}
+what.tag = tagu „{tag}”
+what.description = linii w opisie
+join.and = ani
+
+error.login_immich = Nieprawidłowy e-mail lub hasło konta Immich.
+error.login_not_allowed = {user} nie ma dostępu do Album taggera. Poproś administratora o dodanie konta do auth.allowed_users.
+error.login_unreachable = Nie można połączyć się z Immichem, aby sprawdzić logowanie. Spróbuj później.
+login.email = E-mail konta Immich
+login.hint_immich = Zaloguj się tym samym e-mailem i hasłem co w Immichu.
+nav.user = Zalogowano: {user}
+logs.field.by = Wykonał
+error.key_create_failed = Zalogowano do Immicha, ale nie udało się utworzyć klucza API dla tej sesji. Administrator znajdzie przyczynę w logu aplikacji.
+error.session_lost = Sesja wygasła (aplikacja została uruchomiona ponownie albo minął czas logowania). Zaloguj się ponownie.
+login.hint_immich_keys = Zaloguj się tym samym e-mailem i hasłem co w Immichu. Pracujesz na swoich albumach i zdjęciach.
+logs.person = Osoba
+logs.everyone = Wszyscy
+nav.albums = Albumy
+nav.immich = Otwórz Immich
+nav.theme = Przełącz tryb jasny / ciemny
+nav.account = Konto
+list.open_in_immich = Otwórz album w Immichu (nowa karta)
+apply.and_remove = zdejmij {n}
+apply.removed = zdjęto {tags} z: {photos}
+panel.will_remove = Zostanie zdjęte ze zdjęć tego albumu (nadane wcześniej, teraz niezaznaczone): {tags}
+remove.button = Usuń tagowanie
+remove.confirm = Usunąć wszystko, co tagger zapisał w „{album}”?\n\nTagi zdejmowane ze zdjęć: {tags}\nRównież linia #tagów w opisach zdjęć i linia słów kluczowych w opisie albumu.\nZdjęcia należące do innego otagowanego albumu zachowają swoje tagi.
+remove.working = Usuwanie tagowania: {album}…
+remove.done = {album}: tagowanie usunięte. Tagi {tags} zdjęte z: {photos}; linie w opisach usunięte.
+remove.failed = Nie udało się usunąć tagowania {album}: {error}
+error.not_tagged = Tagger nie otagował tego albumu, nie ma czego usuwać.
+warning.untag_skipped = Tag „{tag}” nie został zdjęty: nie udało się sprawdzić innych albumów, które go mają ({error}).
+warning.kept_elsewhere = {count} zdjęć zachowało zdjęty tag, bo należą też do innego otagowanego albumu.
+warning.not_removed = {count} zdjęć nadal miało „{tag}” {seconds} s po zdjęciu: {files}. Immich może je jeszcze przetwarzać; zastosuj ponownie, aby powtórzyć.
+logs.action.remove = Usunięcie tagowania
+logs.field.removed = Zdjęte tagi
+app.disclaimer = Projekt niezależny, niepowiązany z Immich ani FUTO i przez nie niepromowany. Immich jest znakiem towarowym FUTO.

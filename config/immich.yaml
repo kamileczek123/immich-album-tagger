@@ -1,0 +1,39 @@
+# How to reach Immich. Values like ${NAME} come from environment variables (.env).
+
+# Base URL of your Immich server. "/api" is appended automatically if missing.
+url: ${IMMICH_URL}
+
+# API key from Immich: Account settings -> API Keys.
+# Needed permissions: album.read, asset.read, asset.view, tag.read, tag.create,
+# tag.asset, user.read (or simply "all").
+api_key: ${IMMICH_API_KEY}
+
+verify_tls: true
+timeout_seconds: 30
+
+# Search API used to list the photos of an album:
+#   auto   - try the Immich >= 3.2 "filter" search, fall back to the older one
+#   filter - Immich >= 3.2 only
+#   legacy - Immich < 3.2
+search_api: auto
+
+# Photos per search page (Immich allows at most 1000).
+page_size: 1000
+
+# Photos per tagging request.
+tag_batch_size: 1000
+
+# Also tag archived photos that belong to the album.
+include_archived: true
+
+# After tagging, count how many photos of the album carry each tag and warn on gaps.
+verify_after_apply: true
+
+# Seconds to wait before verifying. Immich applies changes in background jobs and, on a
+# read-only external library, silently reverts them a moment later.
+verify_delay_seconds: 5
+
+# If something is still missing, check again up to verify_retries times, verify_retry_seconds
+# apart, before warning. Large albums keep Immich's job queue busy for a while.
+verify_retries: 3
+verify_retry_seconds: 5

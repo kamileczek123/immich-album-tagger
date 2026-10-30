@@ -1,0 +1,258 @@
+# Immich Album Tagger - English
+# Format: key = text. {name} is filled in by the app. Lines starting with # are comments.
+# This file is copied to LANGUAGE_DIR; a copy with the current @version may be edited there.
+@language = English
+@code = en
+@version = 0.9.1
+
+app.title = Immich Album Tagger
+app.version = Immich Album Tagger version
+
+# ---- header and navigation
+nav.logs = Logs
+nav.logout = Log out
+nav.back = ← Back to albums
+status.connecting = Connecting to Immich…
+status.connected = Immich {version}, {user}. {llm}.
+status.llm_on = LLM {model}
+status.llm_off = LLM off, rules only
+status.unreachable = Cannot reach Immich: {error}
+prefetch.ready = Suggestions ready: {ready}/{window}
+prefetch.preparing = Suggestions ready: {ready}/{window} · preparing…
+prefetch.nothing = Nothing to prepare
+
+# ---- counts (plural forms: one, other)
+count.albums.one = {n} album
+count.albums.other = {n} albums
+count.photos.one = {n} photo
+count.photos.other = {n} photos
+count.people.one = {n} person
+count.people.other = {n} people
+count.tags.one = {n} tag
+count.tags.other = {n} tags
+
+# ---- album list
+list.filter = Filter albums by title
+list.show = Show
+list.all = All
+list.untagged = Not tagged yet
+list.tagged = Tagged
+list.reload = Reload albums
+list.loading = Loading albums…
+list.load_failed = Albums could not be loaded: {error}
+list.count = {shown} shown, {tagged} of {total} tagged
+list.no_match = No album matches this filter.
+list.none = This API key sees no albums. Check the key's owner and permissions.
+list.shared_by = shared by {owner}
+list.shared_with = shared with {people}
+list.applied_tags = Applied tags
+list.keywords = Keywords: {keywords}
+list.not_tagged = Not tagged yet
+list.untitled = (untitled album)
+list.ready = ready
+list.ready_title = Suggestions prepared in the background
+list.suggest = Suggest tags
+list.share = Share album
+
+# ---- bulk selection
+bulk.start = Select albums
+bulk.done = Done selecting
+bulk.count = {albums} selected
+bulk.select_all = Select all shown
+bulk.select_one = Select {album}
+bulk.clear = Clear
+bulk.only_own = Only your own albums can be shared
+bulk.share = Share selected
+bulk.remove = Remove access
+bulk.sharing = Sharing {albums}…
+bulk.removing = Removing access to {albums}…
+bulk.confirm_remove = Remove access of {users} to {albums}?
+
+# ---- tagging panel
+action.add = Add
+action.close = Close
+panel.suggestions = Suggestions
+panel.prepared = prepared in background
+panel.suggest_again = Suggest again
+panel.reading = Reading the album title…
+panel.no_suggestions = No suggestions for this title. Add tags by hand below.
+panel.no_suggestions_error = No suggestions: {error}
+panel.use = Use
+panel.use_title = Replace the tags below with these
+panel.add_title = Add these to the tags below
+panel.tags = Tags to apply
+panel.clear = Clear
+panel.tag_placeholder = Add a tag, e.g. miejsce/chorwacja
+panel.tag_hint = Click a tag to edit it. Use “/” for nested tags. Existing Immich tags autocomplete.
+panel.edit = Edit
+panel.remove_tag = Remove {tag}
+panel.no_tags = No tags yet.
+panel.photo_preview = Photo description line: {line}
+panel.keywords = Album keywords
+panel.keywords_reset = Fill from tags
+panel.keywords_hint = Words people type to find this album on the Albums page, separated by spaces. Filled from the tags above and the base forms of the title words; edit freely.
+panel.keywords_placeholder = e.g. sylwester zielona nowy rok
+panel.keywords_suggestions = Click a suggestion to add or remove it:
+panel.keywords_none = Suggestions appear with the tag suggestions.
+panel.album_preview = Album description line: {line}
+
+source.album-name = Album name
+source.rules = Rules
+source.keywords = Title words
+source.keywords-base = Title words, base forms
+source.llm = LLM
+source_hint.album-name = from the title
+source_hint.rules = from rules
+source_hint.keywords = as written in the title
+source_hint.keywords-base = normalised by the LLM
+source_hint.llm = from the LLM
+
+target.legend = Write to
+target.tags = Tags on photos
+target.tags_hint = Immich tags on every photo you own in this album. Searchable only by you.
+target.photo = Photo descriptions
+target.photo_hint = Adds a line like “#miejsce/polska #sylwester” to each photo's description. Everyone who sees the photos can search it (search type: Description).
+target.album = Album description
+target.album_hint = Adds the album keywords line. Finds the album on the Albums page, also for people it is shared with.
+target.photo_short = photo descriptions
+target.album_short = album description
+
+apply.button = Apply: {what}
+apply.choose = Choose where to write
+apply.working = Writing to {photos} and checking the result…
+apply.photos_updated = {photos} updated
+apply.album_updated = album description updated
+apply.nothing = nothing changed
+apply.verified = Verified in Immich.
+apply.failed = Nothing was applied: {error}
+
+# ---- notifications
+toast.applying = {album}: saving…
+toast.apply_failed = {album}: nothing was applied. {error}
+toast.share_failed = {album}: not shared. {error}
+toast.details = Details
+
+# ---- sharing
+share.title = Share “{album}”
+share.subtitle = People with access to this album and its photos
+share.with = Share with
+share.users_placeholder = E-mails of Immich users, separated by commas
+share.can = Can
+share.button = Share album
+share.hint = People you share with see the photos, their descriptions and the album description. Immich tags and recognised people stay visible only to you.
+share.remove = Remove
+share.working = Sharing…
+share.failed = Not shared: {error}
+share.load_failed = Could not load who has access: {error}
+share.remove_failed = Not removed: {error}
+share.need_user = Enter the e-mail of an Immich user.
+share.confirm_remove = Remove {user} from this album?
+share.not_owner = owned by {owner}
+share.had_no_access = had no access
+share.already_shared = already shared
+share.result.shared = {album}: shared with {user}
+share.result.removed = {album}: access of {user} removed
+share.result.unchanged = {album}: {user} unchanged
+share.result.skipped = {album}: skipped for {user}
+share.result.error = {album}: failed for {user}
+share.count.shared = {n} shared
+share.count.removed = {n} removed
+share.count.unchanged = {n} unchanged
+share.count.skipped = {n} skipped
+share.count.error = {n} failed
+role.owner = Owner
+role.viewer = Can view
+role.editor = Can add and remove photos
+
+# ---- operation log page
+logs.title = Operation log
+logs.all = All
+logs.errors = Errors
+logs.successes = Successes
+logs.reload = Refresh
+logs.clear = Clear log
+logs.confirm_clear = Delete all log entries? This cannot be undone.
+logs.empty = No entries.
+logs.count = {shown} of {total} entries, {errors} errors
+logs.status.success = SUCCESS
+logs.status.error = ERROR
+logs.action.apply = Tags and descriptions
+logs.action.share = Share album
+logs.action.unshare = Remove access
+logs.field.tags = Tags
+logs.field.keywords = Album keywords
+logs.field.targets = Written to
+logs.field.photos = Photos (own / in album)
+logs.field.user = User
+logs.field.role = Access
+logs.field.result = Result
+logs.target.tags = tags on photos
+logs.target.photo_description = photo descriptions
+logs.target.album_description = album description
+logs.result.shared = shared
+logs.result.removed = access removed
+logs.result.unchanged = unchanged
+logs.result.skipped = skipped
+logs.result.error = failed
+
+# ---- login
+login.title = Log in
+login.username = User name
+login.password = Password
+login.button = Log in
+
+# ---- messages from the server
+error.login = Wrong user name or password.
+error.session = Please log in.
+error.no_target = Choose at least one target: tags, photo descriptions or album description.
+error.no_tags = No valid tags left after normalisation.
+error.no_keywords = Album description is selected but there are no keywords.
+error.no_user = Enter at least one user.
+error.user_not_found = No Immich user “{user}”. The person needs an account on this Immich server.
+error.share_self = “{user}” is your own account.
+error.role = Access must be one of: {roles}.
+error.no_albums = No albums selected.
+warning.foreign_photos = {foreign} of {total} photos belong to other users. Immich lets only the owner change tags and descriptions, so they are skipped.
+warning.album_not_owned = The album belongs to {owner}; only the owner can change its description, so it is skipped.
+warning.verify_failed = Could not verify the result: {error}
+warning.and_more = and {count} more
+warning.nothing_kept = None of the {total} photos kept {what} {seconds}s after applying. They are in an external library: if Immich cannot write .xmp sidecar files there (read-only mount), it removes tags and descriptions again. Make the library writable; see the admin guide.
+warning.partly_kept = {count} of {total} photos did not have {what} {seconds}s after applying: {files}. Immich may still be processing them; apply again to retry only these. If they keep failing, check that Immich can write .xmp files next to them.
+warning.llm_unavailable = LLM suggestions are unavailable: {error}
+warning.keywords_unavailable = Base forms of words are unavailable: {error}
+what.tag = tag “{tag}”
+what.description = the description line
+join.and = and
+
+error.login_immich = Wrong e-mail or password of the Immich account.
+error.login_not_allowed = {user} may not use the album tagger. Ask the administrator to add the account to auth.allowed_users.
+error.login_unreachable = Immich cannot be reached to check the login. Try again later.
+login.email = E-mail of your Immich account
+login.hint_immich = Log in with the same e-mail and password as in Immich.
+nav.user = Logged in: {user}
+logs.field.by = By
+error.key_create_failed = Logged in to Immich, but could not create an API key for this session. The administrator will find the reason in the app log.
+error.session_lost = The session has ended (the app was restarted or the login expired). Please log in again.
+login.hint_immich_keys = Log in with the same e-mail and password as in Immich. You work on your own albums and photos.
+logs.person = Person
+logs.everyone = Everyone
+nav.albums = Albums
+nav.immich = Open Immich
+nav.theme = Switch light / dark mode
+nav.account = Account
+list.open_in_immich = Open the album in Immich (new tab)
+apply.and_remove = remove {n}
+apply.removed = removed {tags} from {photos}
+panel.will_remove = Will be taken off this album's photos (applied earlier, not selected now): {tags}
+remove.button = Remove tagging
+remove.confirm = Remove everything the tagger wrote to “{album}”?\n\nTags taken off its photos: {tags}\nAlso the #tag line in photo descriptions and the keyword line in the album description.\nPhotos another tagged album holds keep their tags.
+remove.working = Removing tagging of {album}…
+remove.done = {album}: tagging removed. Tags {tags} taken off {photos}; description lines removed.
+remove.failed = Removing tagging of {album} failed: {error}
+error.not_tagged = The tagger has not tagged this album; there is nothing to remove.
+warning.untag_skipped = Tag “{tag}” was not taken off: the other albums holding it could not be checked ({error}).
+warning.kept_elsewhere = {count} photos kept a removed tag because another tagged album holds them.
+warning.not_removed = {count} photos still had “{tag}” {seconds}s after taking it off: {files}. Immich may still be processing them; apply again to retry.
+logs.action.remove = Remove tagging
+logs.field.removed = Tags taken off
+app.disclaimer = Not affiliated with or endorsed by Immich or FUTO. Immich is a trademark of FUTO.

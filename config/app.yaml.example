@@ -1,0 +1,99 @@
+# app.yaml - settings of the web app itself (optional file).
+# The file may also be written with a top-level "app:" key around everything.
+
+# Translation file LANGUAGE_DIR/<language>.lan, without ".lan". Shipped: english, polish.
+# Your own: copy english.lan to e.g. german.lan, translate, and set german here.
+# Default: english
+language: ${APP_LANGUAGE:-english}
+
+ui:
+  # true:  Apply / Share close the panel at once; the result appears as a notification in
+  #        the top left corner (green on success, red with a link to the log on errors).
+  # false: the panel waits for the result and shows it under the button.
+  # Default: true
+  async_actions: true
+
+  # How long a notification stays on screen, in milliseconds. 1000-120000.
+  # Default: 5000
+  toast_ms: 5000
+
+  # Take colors and font from the running Immich: the app reads the design tokens (CSS
+  # variables --immich-ui-*, the GoogleSans font) from Immich's web UI, so it follows
+  # Immich's look after Immich upgrades. false, or Immich not readable: built-in
+  # Immich-like colors. The layout is the app's own either way.
+  # Default: true
+  immich_theme: true
+
+  # Immich web address to read the theme from, reachable from the app's server (not from
+  # the browser), e.g. http://immich-server:2283 or https://immich.example.com.
+  # Empty = immich.url without /api.
+  # Default: ""
+  immich_theme_url: ""
+
+  # Minutes between re-reads of the theme. 1-1440.
+  # Default: 60
+  immich_theme_refresh_minutes: 60
+
+  # Immich's address as the BROWSER sees it, e.g. https://immich.example.com. Clicking an
+  # album cover opens the album there in a new tab; the sidebar links to it.
+  # Empty: when the app runs under a path of Immich's host name (https://immich.example.com/IAT/)
+  # the domain root is Immich; otherwise there are no links and a cover click opens the
+  # tagging panel.
+  # Default: ""
+  immich_public_url: ""
+
+sharing:
+  # E-mails of Immich users filled in the Share panel and the bulk bar. One line,
+  # comma separated, in square brackets. The field can still be edited before sharing.
+  # Example: [ania@example.com, tomek@example.com]
+  # Default: []
+  default_users: []
+
+  # Access given by default: viewer (can view) or editor (can also add / remove photos).
+  # Default: viewer
+  default_role: viewer
+
+auth:
+  # How the web UI is protected:
+  #   auto        - credentials.yaml if it exists (or APP_USERNAME/APP_PASSWORD), else no login
+  #   immich      - log in with the e-mail and password of an Immich account; Immich checks
+  #                 the password (the session it opens is closed at once). credentials.yaml
+  #                 is ignored. Needs password login enabled in Immich. Everyone works with
+  #                 the API key from immich.yaml, i.e. on the key owner's photos.
+  #   immich_keys - like immich, but everyone works with their OWN Immich account: at login
+  #                 the app creates an API key for that person (key_permissions), keeps it
+  #                 in memory only and deletes it at logout or when the session expires.
+  #                 The API key in immich.yaml is then optional (needed by the CLI only).
+  #   credentials - credentials.yaml is required
+  #   none        - no login; protect the port another way
+  # Default: auto
+  mode: auto
+
+  # Modes immich and immich_keys: Immich accounts allowed to log in, as e-mails or user
+  # ids, e.g. [alex@example.com, ania@example.com]. Empty list:
+  #   immich      - only the owner of the API key
+  #   immich_keys - every account of this Immich server
+  # Default: []
+  allowed_users: []
+
+  # Mode immich_keys: permissions of the API key created at each login. Leave out what the
+  # people must not do; the app warns at start-up about features that will not work.
+  # apiKey.delete is always added (the key deletes itself at logout). It would also allow
+  # deleting the person's other API keys, which the app never does.
+  # Default: the list below (see docs/ADMIN_GUIDE.md, section 2)
+  key_permissions: [user.read, album.read, album.update, albumUser.create, albumUser.delete,
+                    asset.read, asset.update, asset.view, tag.read, tag.create, tag.asset]
+
+  # Mode immich_keys: minutes between deletions of the keys of expired sessions.
+  # Default: 5
+  key_sweep_minutes: 5
+
+  # Hours until a login expires.
+  # Default: 12
+  session_hours: 12
+
+  # Send the session cookie only over HTTPS. Set true in production, behind a TLS proxy
+  # (own host name or a path like /IAT/ of Immich's, see docs/ADMIN_GUIDE.md, section 3a).
+  # false only for plain-HTTP tests: with true over plain HTTP the login does not stick.
+  # Default: false
+  secure_cookie: false
