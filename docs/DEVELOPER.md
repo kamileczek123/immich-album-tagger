@@ -280,7 +280,9 @@ git push origin 0.4.1
 
 Secrets: Gitea needs `IMMICH_ALBUM_TAGGER_TOKEN` (a Gitea token with package write
 access); GitHub needs `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` (a Docker Hub personal
-access token with *Read & Write*). Deploy by changing the image tag in the compose file; What's Up
+access token with *Read & Write*), and optionally `DOCKERHUB_README_TOKEN` (*Read, Write,
+Delete*) to update the Docker Hub description from `README.md`; without it that step is
+skipped with a warning. Deploy by changing the image tag in the compose file; What's Up
 Docker can watch for new `X.Y.Z` tags (`wud.tag.include=^\d+\.\d+\.\d+$`).
 
 The image is built in two stages (wheels, then a slim runtime), runs as UID 10001, ships

@@ -3,7 +3,8 @@
 # (.gitea/workflows/docker.yml, publishing to the Gitea registry). Gitea ignores this file
 # because .gitea/workflows exists; GitHub ignores .gitea/.
 #
-# Secrets: DOCKERHUB_USERNAME, DOCKERHUB_TOKEN (Docker Hub personal access token, Read & Write).
+# Secrets: DOCKERHUB_USERNAME, DOCKERHUB_TOKEN (Docker Hub personal access token, Read & Write),
+# optional DOCKERHUB_README_TOKEN (Read, Write, Delete; only to update the Docker Hub description).
 
 name: Test and publish to Docker Hub
 
@@ -97,11 +98,15 @@ jobs:
           cache-to: type=gha,mode=max
 
       # README links to docs/ and docs/img/; make them absolute GitHub links on Docker Hub.
+      # Docker Hub lets only tokens with "Read, Write, Delete" change a repository's
+      # description, so it may have its own secret, DOCKERHUB_README_TOKEN, and the image
+      # token can stay "Read & Write". A failure here does not fail the release.
       - name: Update Docker Hub description
+        continue-on-error: true
         uses: peter-evans/dockerhub-description@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_README_TOKEN || secrets.DOCKERHUB_TOKEN }}
           repository: ${{ env.IMAGE }}
           short-description: Suggest tags from Immich album titles (rules + LLM) and apply them to every photo of the album.
           readme-filepath: ./README.md
