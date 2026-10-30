@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.9.2
+
+### Fixed
+- The app starts without any LLM settings. The shipped `llm.yaml` now has
+  `enabled: ${LLM_ENABLED:-auto}`: the LLM is on when `LLM_BASE_URL` and `LLM_MODEL` are set,
+  otherwise off, and suggestions come from the regex rules and the album title (the log says
+  so). Before, a missing `LLM_BASE_URL` stopped the app unless `LLM_ENABLED=false` was set.
+  `LLM_ENABLED=true` without an endpoint is still an error.
+
+### Changed
+- GitHub workflow: the Docker Hub description is updated with its own optional token
+  `DOCKERHUB_README_TOKEN` (*Read, Write, Delete*); a failure there no longer fails the
+  release.
+
 ## 0.9.1
 
 First public release (GitHub mirror, Docker Hub image). No change in behaviour.

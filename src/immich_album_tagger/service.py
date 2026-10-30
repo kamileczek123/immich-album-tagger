@@ -145,6 +145,11 @@ class TaggerService:
     def from_config(cls, config: AppConfig, translator: Translator | None = None) -> TaggerService:
         immich = ImmichClient(config.immich)
         llm = LLMPool(config.llm) if config.llm.enabled else None
+        if llm is None:
+            log.info(
+                "LLM is off (llm.enabled, or LLM_BASE_URL / LLM_MODEL not set): "
+                "suggestions come from the rules and the title words only"
+            )
         suggester = Suggester(config.tagging, llm)
         history = History(config.data_dir / "history.sqlite3")
         oplog = OperationLog(config.log_dir)

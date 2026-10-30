@@ -2,8 +2,9 @@
 # Anything that serves POST <base_url>/chat/completions works: llama.cpp llama-server,
 # vLLM, Ollama (http://host:11434/v1), LiteLLM / Bifrost gateways, OpenAI.
 
-# Set LLM_ENABLED=false to use only the rule-based suggestions.
-enabled: ${LLM_ENABLED:-true}
+# auto (default): on when LLM_BASE_URL and LLM_MODEL are set, otherwise off (rules and
+# title words only). LLM_ENABLED=true / false forces it.
+enabled: ${LLM_ENABLED:-auto}
 
 # Including the /v1 part, e.g. http://llm-host:8080/v1
 base_url: ${LLM_BASE_URL}

@@ -3,7 +3,7 @@
 # This file is copied to LANGUAGE_DIR; a copy with the current @version may be edited there.
 @language = English
 @code = en
-@version = 0.9.1
+@version = 0.9.2
 
 app.title = Immich Album Tagger
 app.version = Immich Album Tagger version

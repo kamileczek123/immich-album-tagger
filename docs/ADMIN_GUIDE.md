@@ -153,7 +153,7 @@ Released versions are published on Docker Hub as
 predictable upgrades:
 
 ```yaml
-    image: kamileczek123/immich-album-tagger:0.9.1
+    image: kamileczek123/immich-album-tagger:0.9.2
 ```
 
 To run your own build, replace `image:` with `build: .` (see the comment in the compose
@@ -273,7 +273,7 @@ naming the field.
 | --- | --- | --- |
 | `IMMICH_URL` | — | Immich base URL; `/api` is appended if missing |
 | `IMMICH_API_KEY` | — | API key (section 2) |
-| `LLM_ENABLED` | `true` | `false` = rules only |
+| `LLM_ENABLED` | `auto` | `auto` = on when `LLM_BASE_URL` and `LLM_MODEL` are set, else off; `true` / `false` force it (`true` without them is an error) |
 | `LLM_BASE_URL` | — | OpenAI-compatible base URL including `/v1` |
 | `LLM_API_KEY` | empty | Bearer token, if the endpoint needs one |
 | `LLM_MODEL` | — | Model name as listed by `/v1/models` |
@@ -590,7 +590,7 @@ environment variables, so you can make the hashes once and deploy a file that ne
 a plain password:
 
 ```bash
-docker run --rm kamileczek123/immich-album-tagger:0.9.1 \
+docker run --rm kamileczek123/immich-album-tagger:0.9.2 \
   python -c "from immich_album_tagger.auth import hash_secret as h; print(h('alex')); print(h('passphrase'))"
 ```
 

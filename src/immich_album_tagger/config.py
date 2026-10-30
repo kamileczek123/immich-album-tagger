@@ -113,6 +113,8 @@ class LLMEndpoint(StrictModel):
 
 
 class LLMConfig(StrictModel):
+    # true / false, or "auto": on when base_url and model are both set (the shipped llm.yaml
+    # uses auto, so the app starts without any LLM settings and simply has no LLM).
     enabled: bool = False
     base_url: str = ""
     api_key: str = ""
@@ -148,6 +150,16 @@ class LLMConfig(StrictModel):
     @classmethod
     def _strip_slash(cls, value: str) -> str:
         return value.strip().rstrip("/")
+
+    @model_validator(mode="before")
+    @classmethod
+    def _resolve_auto(cls, data: Any) -> Any:
+        if isinstance(data, dict) and str(data.get("enabled", "")).strip().lower() == "auto":
+            configured = (
+                str(data.get("base_url") or "").strip() and str(data.get("model") or "").strip()
+            )
+            data = {**data, "enabled": bool(configured)}
+        return data
 
     @model_validator(mode="after")
     def _check_enabled(self) -> LLMConfig:

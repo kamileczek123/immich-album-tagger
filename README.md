@@ -47,7 +47,7 @@ Secrets go into `.env` (see `.env.example`).
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env          # set IMMICH_URL, IMMICH_API_KEY, LLM_* (or LLM_ENABLED=false)
+cp .env.example .env          # set IMMICH_URL, IMMICH_API_KEY; LLM_* optional
 cp docker-compose.yml.example docker-compose.yml   # adjust ports, volumes, image
 docker compose run --rm immich-album-tagger check   # verify connections
 docker compose up -d
@@ -100,4 +100,5 @@ through its public REST API; it contains no Immich code or logo.
 - Immich with an API key **of the account that owns the photos** (permissions in the admin
   guide). Photos in external libraries need a writable library folder.
 - Docker, or Python 3.11+.
-- Optional: an OpenAI-compatible LLM endpoint.
+- Optional: an OpenAI-compatible LLM endpoint. Without one (no `LLM_BASE_URL` /
+  `LLM_MODEL`) the app runs with suggestions from regex rules and the album title only.

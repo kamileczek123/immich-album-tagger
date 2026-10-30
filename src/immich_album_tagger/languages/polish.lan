@@ -3,7 +3,7 @@
 # Plik jest kopiowany do LANGUAGE_DIR; kopię z bieżącą @version można tam edytować.
 @language = Polski
 @code = pl
-@version = 0.9.1
+@version = 0.9.2
 
 app.title = Immich Album Tagger
 app.version = Wersja Immich Album Tagger

@@ -4,9 +4,12 @@
 # Ollama (http://host:11434/v1), LiteLLM / Bifrost gateways, OpenAI.
 # The file may also be written with a top-level "llm:" key around everything.
 
-# Use the LLM. LLM_ENABLED=false in .env turns it off without editing this file.
-# Default when the file is missing: false. Default in this file: true.
-enabled: ${LLM_ENABLED:-true}
+# Use the LLM: true, false, or auto = on when base_url and model are set (LLM_BASE_URL,
+# LLM_MODEL), off otherwise - the app then works without an LLM, with suggestions from the
+# rules and the title words. true without base_url / model is an error (catches typos).
+# LLM_ENABLED in .env sets it without editing this file.
+# Default when the file is missing: false. Default in this file: auto.
+enabled: ${LLM_ENABLED:-auto}
 
 # Base URL including /v1, e.g. https://your.openai-compatible.url/v1
 # Required when enabled.

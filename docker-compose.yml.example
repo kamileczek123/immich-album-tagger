@@ -1,7 +1,7 @@
 # cp docker-compose.yml.example docker-compose.yml && docker compose up -d   ->   http://<host>:8080
 services:
   immich-album-tagger:
-    # Released image (linux/amd64, linux/arm64); pin a version, e.g. :0.9.1.
+    # Released image (linux/amd64, linux/arm64); pin a version, e.g. :0.9.2.
     image: kamileczek123/immich-album-tagger:latest
     # To build from this source tree instead, use these two lines:
     # build: .

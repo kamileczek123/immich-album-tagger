@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "immich-album-tagger"
-version = "0.9.1"
+version = "0.9.2"
 description = "Suggest tags from Immich album titles (rules + LLM), review them in a web UI and apply them to every photo in the album."
 readme = "README.md"
 license = "MIT"

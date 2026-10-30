@@ -76,3 +76,29 @@ def test_lowercase_placeholders_are_not_environment(monkeypatch, tmp_path):
     )
     config = load_config(tmp_path, tmp_path)
     assert config.tagging.rules.rules[0].tags == ["czas/rok/${year}"]
+
+
+@pytest.mark.parametrize(
+    ("env", "enabled"),
+    [
+        ({}, False),  # nothing set: the app starts without an LLM
+        ({"LLM_BASE_URL": "http://llm:8080/v1"}, False),  # half-configured: still off
+        ({"LLM_BASE_URL": "http://llm:8080/v1", "LLM_MODEL": "m"}, True),
+        ({"LLM_ENABLED": "false", "LLM_BASE_URL": "http://llm/v1", "LLM_MODEL": "m"}, False),
+    ],
+)
+def test_shipped_llm_yaml_is_auto(monkeypatch, tmp_path, env, enabled):
+    for var in ("LLM_ENABLED", "LLM_BASE_URL", "LLM_MODEL"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv("IMMICH_URL", "http://immich:2283")
+    monkeypatch.setenv("IMMICH_API_KEY", "key")
+    for name, value in env.items():
+        monkeypatch.setenv(name, value)
+    assert load_config(REPO / "config", tmp_path).llm.enabled is enabled
+
+
+def test_llm_enabled_true_without_endpoint_is_an_error():
+    with pytest.raises(ValueError, match="base_url or model is empty"):
+        LLMConfig(enabled=True)
+    assert LLMConfig(enabled="auto").enabled is False
+    assert LLMConfig(enabled="AUTO", base_url="http://x/v1", model="m").enabled is True
