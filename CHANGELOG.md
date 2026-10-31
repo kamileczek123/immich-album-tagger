@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+- Admin guide: the multi-model `llm.yaml` example uses neutral model names.
+
 ## 0.9.2
 
 ### Fixed

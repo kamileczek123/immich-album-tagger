@@ -330,10 +330,10 @@ variants, base forms of the title words); they are sent together. All requests o
 - what the user opens goes before background preparation.
 
 ```yaml
-model: aux/qwen35-4b        # the main endpoint, as above
+model: small-model          # the main endpoint, as above
 max_concurrent: 2           # llama-server --parallel 2
 endpoints:                  # same gateway (base_url, api_key inherited), other models
-  - model: router/qwen35-4b
+  - model: second-model
     max_concurrent: 1
   - model: big-model        # or another server
     base_url: http://gpu-host:8080/v1
